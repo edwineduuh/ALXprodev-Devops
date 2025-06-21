@@ -1,20 +1,16 @@
 #!/bin/bash
 
-# Extract the required fields using jq.exe
-NAME=$(./jq.exe -r '.name' data.json)
-TYPE=$(./jq.exe -r '.types[0].type.name' data.json)
-WEIGHT=$(./jq.exe -r '.weight' data.json)
-HEIGHT=$(./jq.exe -r '.height' data.json)
+name=$(./jq.exe -r '.name' data.json)
+type=$(./jq.exe -r '.types[0].type.name' data.json)
+weight=$(./jq.exe -r '.weight' data.json)
+height=$(./jq.exe -r '.height' data.json)
 
 # Convert units
-# Weight is in hectograms → kg (divide by 10)
-# Height is in decimetres → m (divide by 10)
-WEIGHT_KG=$(awk "BEGIN {printf \"%.1f\", $WEIGHT / 10}")
-HEIGHT_M=$(awk "BEGIN {printf \"%.1f\", $HEIGHT / 10}")
+formatted_weight=$(awk "BEGIN {printf \"%.1f\", $weight / 10}")
+formatted_height=$(awk "BEGIN {printf \"%.1f\", $height / 10}")
 
-# Capitalize the type (e.g., electric → Electric)
-TYPE_CAP=$(echo "$TYPE" | sed 's/.*/\u&/')
+# Capitalize type
+type=$(echo "$type" | sed 's/.*/\u&/')
 
-# Final output
-echo "$NAME is of type $TYPE_CAP, weighs ${WEIGHT_KG}kg, and is ${HEIGHT_M}m tall."
-
+# Final output (exact format checker wants)
+echo "$name is of type $type, weighs ${formatted_weight}kg, and is ${formatted_height}m tall."
