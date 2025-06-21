@@ -1,0 +1,20 @@
+#!/bin/bash
+
+# Extract the required fields using jq.exe
+NAME=$(./jq.exe -r '.name' data.json)
+TYPE=$(./jq.exe -r '.types[0].type.name' data.json)
+WEIGHT=$(./jq.exe -r '.weight' data.json)
+HEIGHT=$(./jq.exe -r '.height' data.json)
+
+# Convert units
+# Weight is in hectograms → kg (divide by 10)
+# Height is in decimetres → m (divide by 10)
+WEIGHT_KG=$(awk "BEGIN {printf \"%.1f\", $WEIGHT / 10}")
+HEIGHT_M=$(awk "BEGIN {printf \"%.1f\", $HEIGHT / 10}")
+
+# Capitalize the type (e.g., electric → Electric)
+TYPE_CAP=$(echo "$TYPE" | sed 's/.*/\u&/')
+
+# Final output
+echo "$NAME is of type $TYPE_CAP, weighs ${WEIGHT_KG}kg, and is ${HEIGHT_M}m tall."
+
